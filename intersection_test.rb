@@ -4,6 +4,8 @@
 # There is a little bit of ruby magic to run them 
 # for each different class from above
 #====================================================================
+require "minitest"
+require "minitest/autorun"
 require_relative './intersection'
 
 # run tests for each implementation

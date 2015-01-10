@@ -20,8 +20,6 @@
 # built-in sort in ruby (that is written in C), so it's not really a
 # "fair" comparison of these algorithms in the classical sense.
 #====================================================================
-require "minitest"
-require "minitest/autorun"
 require "benchmark"
 require "set"
 
@@ -30,21 +28,21 @@ module Intersection
   # and the tests to iterate through all of them
   def self.algorithms
     [
-      AmpersandIntersector,
-      RubyishIntersector,
-      SortedWalkIntersector,
-      CountingHashIntersector,
-      SimpleHashIntersector,
-      SetIntersector,
-      ShiftingIntersector,
-      PoppingIntersector,
-      BruteForceIntersector
+      Ampersand,
+      Rubyish,
+      SortedWalk,
+      CountingHash,
+      SimpleHash,
+      Sets,
+      Shifting,
+      Popping,
+      BruteForce
     ]
   end
 
   # The ruby & operator returns the intersection of two arrays
   # Doesn't handle duplicates
-  class AmpersandIntersector
+  class Ampersand
     def self.intersect(a, b)
       a & b
     end
@@ -52,14 +50,14 @@ module Intersection
 
   # #select returns all of the elements for which the block returns true
   # Doesn't handle duplicates
-  class RubyishIntersector
+  class Rubyish
     def self.intersect(a, b)
       a.select {|x| b.include? x}
     end
   end
 
   # The loop-inside-a-loop way
-  class BruteForceIntersector
+  class BruteForce
     def self.intersect(a, b)
       result = []
       # Loop through 1st array
@@ -77,7 +75,7 @@ module Intersection
   end
 
   # Sort then walk both arrays, comparing each value as we go
-  class SortedWalkIntersector
+  class SortedWalk
     def self.intersect(a, b)
       # Sort both arrays
       a.sort!
@@ -111,7 +109,7 @@ module Intersection
 
   # Similar to the sorted walk, but instead of incrementing indexes,
   # remove items from the input arrays using #shift as we "walk"
-  class ShiftingIntersector
+  class Shifting
     def self.intersect(a, b)
       # Sort both arrays
       a.sort!
@@ -145,7 +143,7 @@ module Intersection
   end
 
   # Similar to the shifting approach, but using pop (end of list) instead
-  class PoppingIntersector
+  class Popping
     def self.intersect(a, b)
       #
       # Sort both arrays
@@ -181,7 +179,7 @@ module Intersection
 
   # Does not handle duplicates
   # Think of a Set as a Hash where the only values are true or false
-  class SetIntersector
+  class Sets
     def self.intersect(a, b)
       items = Set.new
 
@@ -205,7 +203,7 @@ module Intersection
     end
   end
 
-  class CountingHashIntersector
+  class CountingHash
     def self.intersect(a, b)
       # Create a hash with default value of 0
       counts = Hash.new(0)
@@ -233,7 +231,7 @@ module Intersection
 
   # put items in the first array into the keys of a hash with true as a value then
   # loop through all items in the second array and ask the hash if it has them
-  class SimpleHashIntersector
+  class SimpleHash
     def self.intersect(a, b)
       # Create a hash
       items = {}
