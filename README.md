@@ -8,7 +8,7 @@ Read the comments throughout for more information.
   ruby intersection_test.rb
 ```
 
-Note that the test for duplicates is expcted to fail with some of the algorithms.
+Note that the test for duplicates is expected to fail with some of the algorithms.
 
 
 ### run the "thunderdome" which runs a degenerate case against all of the algorithms until only one survives.
