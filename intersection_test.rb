@@ -33,9 +33,6 @@ Intersection.algorithms.each do |algorithm|
       it "cares not for initial sort order" do
         algorithm.intersect([10,7,2,3,8,5], [3,2,9,4,1, 7]).sort.must_equal([2,3,7])
       end
-
-      it "benchmark" do
-      end
     end
   end
 end
