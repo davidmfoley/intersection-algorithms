@@ -19,13 +19,18 @@ limit = 2    # (in seconds) algorithms that take longer than this are eliminated
 # start with all of them
 contenders = Intersection.algorithms
 
-puts "THUNDERDOME! " + contenders.length.to_s + ' ALGORITHMS ENTER BUT ONLY ONE LEAVES VICTORIOUS!'
+class Result < Struct.new(:algorithm, :elapsed_seconds)
+  def to_s
+    self.algorithm.name + ': ' + (self.elapsed_seconds * 1000).to_i.to_s + ' ms'
+  end
+end
 
 # for each count, run all of the algorithms and rank them by time
 while contenders.length > 1
   # (count) odd and even numbers
   odds = (1..count*2).step(2).to_a.shuffle
   evens = (2..count*2).step(2).to_a.shuffle
+
 
   results = []
 
@@ -46,7 +51,7 @@ while contenders.length > 1
     elapsed = Benchmark.measure { contender.intersect(a, b) }.real
 
     # Store in an array of arrays [[algorithm, timing]]
-    results << [contender, elapsed]
+    results << Result.new(contender, elapsed)
     putc '.'
   end
 
@@ -57,25 +62,24 @@ while contenders.length > 1
   puts 'Thunderdome round with (' + evens.length.to_s + ') items'
   puts
 
+
+
   results.each do |result|
-    # TBH this is a pretty lazy way to store these results...
-    algorithm = result[0]
-    elapsed_seconds = result[1]
-
     # print the results
-    puts algorithm.to_s + ': ' + (elapsed_seconds * 1000).to_i.to_s + ' ms'
+    puts result.to_s
+  end
 
+  results.each do |result|
     # eliminate if too slow
-    if (elapsed_seconds > limit)
-      contenders.delete algorithm
-      puts algorithm.to_s + ' IS ELIMINATED!'
+    if (result.elapsed_seconds > limit)
+      contenders.delete result.algorithm
+      puts result.algorithm.to_s + ' eliminated'
     end
   end
 
   # end condition
   if (contenders.length <= 1)
     puts
-    puts "THE WINNER IS " + results[0][0].to_s
   else
     puts contenders.length.to_s + ' contenders remain'
   end
