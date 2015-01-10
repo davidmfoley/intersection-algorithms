@@ -13,12 +13,20 @@
 
 require_relative './intersection'
 
-count = 1024 # how many items to start with - this is doubled each round
-limit = 2    # (in seconds) algorithms that take longer than this are eliminated
+def run_thunderdome
+  count = 1024 # how many items to start with - this is doubled each round
+  limit = 2    # (in seconds) algorithms that take longer than this are eliminated
+
+  # start with all of them
+  contenders = Intersection.algorithms
+  # for each count, run all of the algorithms and rank them by time
+  while contenders.length > 1
+    do_round(contenders, count, limit)
 
 
-# start with all of them
-contenders = Intersection.algorithms
+    count += count
+  end
+end
 
 class Result < Struct.new(:algorithm, :elapsed_seconds)
   def to_s
@@ -86,11 +94,4 @@ def do_round(contenders, count, limit)
   end
 end
 
-# for each count, run all of the algorithms and rank them by time
-while contenders.length > 1
-  do_round(contenders, count, limit)
-
-
-  count += count
-end
-
+run_thunderdome
