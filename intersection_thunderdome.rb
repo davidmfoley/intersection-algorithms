@@ -4,7 +4,10 @@
 # Runs each algorithm on a dataset that doubles in size each iteration
 # Times the results of each and prints out a ranking.
 #
-# Eliminates algorithms that take longer than the specified limit 
+# Eliminates algorithms that take longer than the specified limit
+#
+# Note that this is not extremely scientific
+#
 # (see below)
 #====================================================================
 
@@ -40,7 +43,7 @@ while contenders.length > 1
     b = evens.dup
 
     # time the intersect operation in "real" time
-    elapsed = Benchmark.measure { contender.intersect(a, b) }.utime
+    elapsed = Benchmark.measure { contender.intersect(a, b) }.real
 
     # Store in an array of arrays [[algorithm, timing]]
     results << [contender, elapsed]
