@@ -10,15 +10,14 @@
 # Some of these handle duplicate items in the arrays and some do not
 # for example:
 # ([1,1,2,2,3], [1,2,2,3,3]) -> (1,2,2,3)
-#
-# Note that there are two "2"s in each array so 
+# (Note that there are two 2s in _each_ array so there are two 2s in the output)
 #
 # (see comments on each algorithm)
 #
 # Note that some of the implementations use sort!
 #
 # These would be slower if we did the sort in ruby instead of using the
-# built-in sort in ruby (that is written in C), so it's not really a 
+# built-in sort in ruby (that is written in C), so it's not really a
 # "fair" comparison of these algorithms in the classical sense.
 #====================================================================
 require "minitest"
@@ -27,6 +26,8 @@ require "benchmark"
 require "set"
 
 module Intersection
+  # this list of all of the algorithms is used by the thunderdome
+  # and the tests to iterate through all of them
   def self.algorithms
     [
       AmpersandIntersector,
