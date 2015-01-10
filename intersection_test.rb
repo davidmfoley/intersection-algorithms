@@ -1,4 +1,4 @@
-# Below are some tests for the algorithms
+# tests for the intersection algorithms
 # They use the minispec framework
 #
 # There is a little bit of ruby magic to run them
@@ -6,7 +6,6 @@
 #
 # Note that this is pretty simple set of tests.
 # Try adding your own...
-#====================================================================
 require "minitest"
 require "minitest/autorun"
 require_relative './intersection'
