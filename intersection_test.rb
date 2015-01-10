@@ -27,7 +27,7 @@ Intersection.algorithms.each do |algorithm|
       end
 
       # this fails for the algorithms that don't handle duplicates
-      # as noted in the comments above
+      # as noted in the comments on the algorithm implementations
       it "handles duplicates (expected failure for some algorithms)" do
         algorithm.intersect([1,2,2,3,3,5], [1,2,2,3,4]).sort.must_equal([1,2,2,3])
       end
