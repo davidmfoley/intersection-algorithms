@@ -236,8 +236,7 @@ module Intersection
       # Create a hash
       items = {}
 
-      # Loop through the first list
-      #   for each item, increment the hash value with that key by one
+      # Loop through the first list and set the hash value to true
       a.each do |x|
         items[x] = true
       end
