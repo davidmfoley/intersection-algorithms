@@ -6,9 +6,9 @@
 #
 # Note that this is pretty simple set of tests.
 # Try adding your own...
-require "minitest"
+
 require "minitest/autorun"
-require_relative './intersection'
+require_relative "./intersection"
 
 # run tests for each implementation
 Intersection.algorithms.each do |algorithm|
