@@ -96,6 +96,7 @@ module Intersection
       # Otherwise, move forward only in the list with the smaller value
       # Repeat until we reach the end of either list
       while (a_index < a.length && b_index < b.length) do
+        # Note: could also use the "spaceship" operator (<=>) here
         if a[a_index] == b[b_index]
           result << a[a_index]
           a_index += 1
