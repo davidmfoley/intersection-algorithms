@@ -14,49 +14,38 @@
 #
 # (see comments on each algorithm)
 #
-# Note that some of the implementations use sort!
+#
+# Note 1: some of the implementations use sort!
 #
 # These would be slower if we did the sort in ruby instead of using the
 # built-in sort in ruby (that is written in C), so it's not really a
 # "fair" comparison of these algorithms in the classical sense.
+#
+# ruby is "slower" than most other programming languages, so generally
+#
+#
 #====================================================================
 require "benchmark"
 require "set"
 
 module Intersection
-  # this list of all of the algorithms is used by the thunderdome
-  # and the tests to iterate through all of them
-  def self.algorithms
-    [
-      Ampersand,
-      Rubyish,
-      SortedWalk,
-      CountingHash,
-      SimpleHash,
-      Sets,
-      Shifting,
-      Popping,
-      BruteForce
-    ]
-  end
-
+  # the built-in way
+  #
   # The ruby & operator returns the intersection of two arrays
   # Doesn't handle duplicates
+  #
+  # Internally, uses a method similar (but not identical) to the simple hash method below
+  #
   class Ampersand
     def self.intersect(a, b)
       a & b
     end
   end
 
-  # #select returns all of the elements for which the block returns true
-  # Doesn't handle duplicates
-  class Rubyish
-    def self.intersect(a, b)
-      a.select {|x| b.include? x}
-    end
-  end
-
   # The loop-inside-a-loop way
+  #
+  # Slowest of all of the implementations
+  #
   class BruteForce
     def self.intersect(a, b)
       result = []
@@ -74,6 +63,21 @@ module Intersection
     end
   end
 
+  # This is basically the same as the brute force method above,
+  # but in a more "rubyish" fashion
+  #
+  # #select returns all of the elements for which the block returns true
+  # include? looks for the item in the second array
+  #
+  # Doesn't handle duplicates
+  #
+  class Rubyish
+    def self.intersect(a, b)
+      a.select {|x| b.include? x}
+    end
+  end
+
+  # the above algorithms
   # Sort then walk both arrays, comparing each value as we go
   class SortedWalk
     def self.intersect(a, b)
@@ -82,8 +86,8 @@ module Intersection
       b.sort!
 
       # array indexes into a and b, respectively
-      ai = 0
-      bi = 0
+      a_index = 0
+      b_index = 0
 
       result = []
 
@@ -91,15 +95,15 @@ module Intersection
       # If the same, put on our results stack and move forward in both lists
       # Otherwise, move forward only in the list with the smaller value
       # Repeat until we reach the end of either list
-      while (ai < a.length && bi < b.length) do
-        if a[ai] == b[bi]
-          result << a[ai]
-          ai += 1
-          bi += 1
-        elsif  a[ai] < b[bi]
-          ai += 1
+      while (a_index < a.length && b_index < b.length) do
+        if a[a_index] == b[b_index]
+          result << a[a_index]
+          a_index += 1
+          b_index += 1
+        elsif  a[a_index] < b[b_index]
+          a_index += 1
         else
-          bi += 1
+          b_index += 1
         end
       end
 
@@ -116,9 +120,9 @@ module Intersection
       b.sort!
 
       # Shift the first item from each array
-      # ax and bx hold the current values we are comparing at any time
-      ax = a.shift
-      bx = b.shift
+      # the current values we are comparing at any time
+      current_a = a.shift
+      current_b = b.shift
 
       result = []
 
@@ -126,15 +130,15 @@ module Intersection
       # If the same, put on our results stack and shift new items from both lists
       # Otherwise, shift the next item from the list with the smaller value
       # Repeat until we reach the end of either list (nil in either shifted item)
-      while (ax && bx) do
-        if ax == bx
-          result << ax
-          ax = a.shift
-          bx = b.shift
-        elsif ax < bx
-          ax = a.shift
+      while (current_a && current_b) do
+        if current_a == current_b
+          result << current_a
+          current_a = a.shift
+          current_b = b.shift
+        elsif current_a < current_b
+          current_a = a.shift
         else
-          bx = b.shift
+          current_b = b.shift
         end
       end
 
@@ -152,8 +156,8 @@ module Intersection
 
 
       # Pop the first item from each
-      ax = a.pop
-      bx = b.pop
+      current_a = a.pop
+      current_b = b.pop
 
       result = []
 
@@ -161,15 +165,15 @@ module Intersection
       # If the same, put on our results stack and pop new items from both lists
       # Otherwise, pop only the list with the smaller value
       # Repeat until we reach the end of either list (nil in either popped item)
-      while (ax && bx) do
-        if ax == bx
-          result << ax
-          ax = a.pop
-          bx = b.pop
-        elsif  ax > bx
-          ax = a.pop
+      while (current_a && current_b) do
+        if current_a == current_b
+          result << current_a
+          current_a = a.pop
+          current_b = b.pop
+        elsif  current_a > current_b
+          current_a = a.pop
         else
-          bx = b.pop
+          current_b = b.pop
         end
       end
 
@@ -181,12 +185,12 @@ module Intersection
   # Think of a Set as a Hash where the only values are true or false
   class Sets
     def self.intersect(a, b)
-      items = Set.new
+      set_a = Set.new
 
       # Loop through the first list
       #   for each item, increment the hash value with that key by one
       a.each do |x|
-        items << x
+        set_a << x
       end
 
       result = []
@@ -194,7 +198,7 @@ module Intersection
       # Loop through the second list
       #   check the Set and put on our results stack
       b.each do |y|
-        if items.include? y
+        if set_a.include? y
           result << y
         end
       end
@@ -246,7 +250,7 @@ module Intersection
       # Loop through the second list
       #   check the hash
       b.each do |y|
-        if items[y]
+        if items.delete(y)
           result << y
         end
       end
@@ -254,4 +258,21 @@ module Intersection
       result
     end
   end
+
+  # this list of all of the algorithms is used by the thunderdome
+  # and the tests to iterate through all of them
+  def self.algorithms
+    [
+      Ampersand,
+      Rubyish,
+      SortedWalk,
+      CountingHash,
+      SimpleHash,
+      Sets,
+      Shifting,
+      Popping,
+      BruteForce
+    ]
+  end
+
 end
