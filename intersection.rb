@@ -22,8 +22,8 @@
 # "fair" comparison of these algorithms in the classical sense.
 #
 # ruby is "slower" than most other programming languages, so generally
-#
-#
+# it's built-in functions should perform better than the equivalent
+# logic implemented in ruby
 #====================================================================
 require "benchmark"
 require "set"
